@@ -11,6 +11,7 @@ public:
 	static void printWelcome();
 	static void inputOptionMenu(char* username, int* outputOption);
 	static void inputLogin(char** username, char** password);
+	static bool handleInvalidUser(char* username, char* password);
 
 };
 

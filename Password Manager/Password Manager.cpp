@@ -3,21 +3,26 @@
 #include "ConsoleApp.hpp"
 #include "LoginHandler.hpp"
 #include "FileManager.hpp"
+#include <random>
 
 void handleMenu(int option);
 
 int main()
 {
+	
 	char* usernameInput = NULL;
 	char* passwordInput = NULL;
 
 	ConsoleApp::printWelcome();
 
 	ConsoleApp::inputLogin(&usernameInput, &passwordInput);
-	if (!FileManager::isLineInFile(USERS_FILE, usernameInput))
+	
+	if (!LoginHandler::doesUserExist(usernameInput, passwordInput))
 	{
-		printf("User is not an option...\n");
-		return 0 ;
+		if (!ConsoleApp::handleInvalidUser(usernameInput, passwordInput))
+		{
+			return 0;
+		}
 	}
 	
 
@@ -28,7 +33,6 @@ int main()
 
 		handleMenu(userOption);
 	}
-	
 
 	printf("Thank you for using the weirdest password manager!\n");
 

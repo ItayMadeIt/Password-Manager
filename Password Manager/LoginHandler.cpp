@@ -1,7 +1,17 @@
 #include "LoginHandler.hpp"
-#include "TemparoryHash.h"
 
-bool LoginHandler::verifyLogin(char* username, char* password, char* errorMsg)
+/// <summary>
+/// A simple check if the login is valid, not if it exists 
+/// 
+/// 1. Checks the lengths of the username and password.
+/// 2. Checks if the username has only letters and numbers.
+/// 3. Checks if the password has only letters, numbers and symbols.
+/// </summary>
+/// <param name="username">Username</param>
+/// <param name="password">Password</param>
+/// <param name="errorMsg">The occured error if there is one</param>
+/// <returns></returns>
+bool LoginHandler::verifyLoginValid(char* username, char* password, char* errorMsg)
 {
 	int usernameLen = strlen(username);
 	int passwordLen = strlen(password);
@@ -55,7 +65,45 @@ bool LoginHandler::verifyLogin(char* username, char* password, char* errorMsg)
 	return true;
 }
 
+bool LoginHandler::doesUserExist(char* username, char* password)
+{
+	char* line = NULL;
+	
+	createLoginLine(username, password, &line);
+	
+	bool returnValue = FileManager::isLineInFile(USERS_FILE, line);
+
+	free(line);
+
+	return returnValue;
+}
+
+void LoginHandler::createUser(char* username, char* password)
+{
+	char* line = NULL;
+
+	createLoginLine(username, password, &line);
+
+	FileManager::addToFile(USERS_FILE, line);
+
+	free(line);
+}
+
 int LoginHandler::encryptPassword(char* password)
 {
 	return TemparoryHash::simpleHash(password);
+}
+
+void LoginHandler::createLoginLine(char* username, char* password, char** output)
+{
+	std::string stringPassword = std::to_string(TemparoryHash::simpleHash(password));
+	// size based on the username, space, password, \n and \0
+	int newLineSize = (strlen(username) + 1 + stringPassword.size() + 1 + 1);
+
+	*output = (char*)malloc(newLineSize * sizeof(char));
+
+	strcpy(*output, username);
+	strcpy(*output + strlen(username), " ");
+	strcpy(*output + strlen(username) + 1, stringPassword.c_str());
+
 }

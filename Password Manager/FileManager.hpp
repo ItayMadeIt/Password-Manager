@@ -5,7 +5,7 @@
 #include <cstdio>
 #include "Settings.hpp"
 
-#define MAX_LINE_LEN std::max(MAX_USERNAME_LENGTH, MAX_PASSWORD_LENGTH) + 1
+#define MAX_LINE_LEN MAX_USERNAME_LENGTH + strlen("4294967294") + 1
 
 class FileManager
 {
@@ -23,6 +23,27 @@ public:
 
 		fclose(file);
 	}
+	static bool strInLineStartFile(const char* fileName, char* str)
+	{
+		FILE* file = fopen(fileName, "r");
+
+		char* buffer = (char*)malloc(sizeof(char) * MAX_LINE_LEN);
+
+		while (fgets(buffer, MAX_LINE_LEN, file))
+		{
+			buffer[strcspn(buffer, "\n")] = 0;
+
+			if (strcmp(str, buffer) == 0)
+			{
+				return true;
+			}
+		}
+
+		free(buffer);
+		fclose(file);
+
+		return false;
+	}
 	static bool isLineInFile(const char* fileName, char* line)
 	{
 		FILE* file = fopen(fileName, "r");
@@ -39,6 +60,7 @@ public:
 			}
 		}
 
+		free(buffer);
 		fclose(file);
 	
 		return false;

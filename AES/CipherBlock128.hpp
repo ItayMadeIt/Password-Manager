@@ -6,6 +6,8 @@
 #include<iomanip>
 #include<sstream>
 
+#define BYTE_TO_BIT 8
+
 const int BLOCK_SIZE = 4;
 
 class CipherBlock128 
@@ -23,6 +25,12 @@ public:
 	// print
 	void printHex();
 	void printBinary();
+
+	// get row and column as integers (4 chars = 4 bytes = int)
+	int getRow(int row);
+	int shiftRow(int row, int shift);
+	int getColumn(int column);
+	int shiftColumn(int column, int shift);
 
 	// xor operation
 	CipherBlock128 operator^(const CipherBlock128& other);

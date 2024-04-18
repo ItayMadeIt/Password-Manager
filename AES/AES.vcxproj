@@ -145,12 +145,14 @@
   <ItemGroup>
     <ClInclude Include="AES.hpp" />
     <ClInclude Include="CipherBlock128.hpp" />
+    <ClInclude Include="KeyGeneration.hpp" />
     <ClInclude Include="SBox.hpp" />
     <ClInclude Include="Utillity.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AES.cpp" />
     <ClCompile Include="CipherBlock128.cpp" />
+    <ClCompile Include="KeyGeneration.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Utillity.cpp" />
   </ItemGroup>

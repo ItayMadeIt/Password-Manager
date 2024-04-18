@@ -18,23 +18,30 @@ double end_timer(std::chrono::time_point<std::chrono::high_resolution_clock> sta
 
 int main() 
 {
-	int values[BLOCK_SIZE] = { 0x13222110 , 0x27261514 , 0x2b1a2928 , 0x2f1e2d1c };
 
 	unsigned char values1[BLOCK_SIZE * BLOCK_SIZE] = 
-                                { 0x11 , 0x21 , 0x22 , 0x13 
-                                , 0x14 , 0x15 , 0x26 , 0x27 
-                                , 0x28 , 0x29 , 0x1a , 0x2b 
-                                , 0x1c , 0x2d , 0x1e , 0x2f };
+                                { 0x11 , 0x11 , 0x12 , 0x13 
+                                , 0x14 , 0x15 , 0x26 , 0x64 
+                                , 0x28 , 0x29 , 0x1a , 0x52 
+                                , 0x23 , 0x64 , 0x52 , 0x11 };
 
 
     CipherBlock128 block = CipherBlock128();
-    block = CipherBlock128(0xf);
     printf("Values 0:\n");
-    block.printBinary();
+    block.printHex();
     
     CipherBlock128 block1 = CipherBlock128(values1);
     printf("\nValues 1:\n");
-    block1.printBinary();
+    block1.printHex();
+
+    CipherBlock128 result = block ^ block1;
+    printf("\nResult:\n");
+    result.printHex();
+
+    std::cout << std::hex << result.getRow(3) << std::endl;
+    std::cout << std::hex << result.shiftRow(3, 1) << std::endl;
+    std::cout << std::hex << result.getColumn(3) << std::endl;
+    std::cout << std::hex << result.shiftColumn(3, 1) << std::endl;
 
     AES::encrypt128(block, block1);
 

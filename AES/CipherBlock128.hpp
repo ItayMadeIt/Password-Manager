@@ -1,38 +1,22 @@
 #ifndef CIPHER_BLOCK_128_HEADER
 #define CIPHER_BLOCK_128_HEADER
 
+#include <iostream>
+#include <bitset>
+#include<iomanip>
+#include<sstream>
+
 const int BLOCK_SIZE = 4;
 
-typedef struct CipherBlock128 
+class CipherBlock128 
 {
+public:
 	unsigned char data[BLOCK_SIZE][BLOCK_SIZE];
 
-	// taking 32 + 32 + 32 + 32 = 128 bits
-	void init(const int values[BLOCK_SIZE ])
-	{
-		for (int i = 0; i < BLOCK_SIZE; ++i) 
-		{
-			*((int*)data[i]) = values[i];
-		}
-	}
-
-	// taking 4 * 4  * 8 = 128 bits
-	void init(const unsigned char values[BLOCK_SIZE][BLOCK_SIZE])
-	{
-		for (int i = 0; i < BLOCK_SIZE * BLOCK_SIZE; ++i) 
-		{
-			data[0][i] = values[0][i];
-		}
-	}
-
-	// taking (4 * 4) array as bytes, 16 * 8 as bits = 128 bits
-	void init(const unsigned char values[BLOCK_SIZE * BLOCK_SIZE])
-	{
-		for (int i = 0; i < BLOCK_SIZE * BLOCK_SIZE; ++i)
-		{
-			data[0][i] = values[i];
-		}
-	}
+	CipherBlock128();
+	CipherBlock128(const int values[BLOCK_SIZE]);
+	CipherBlock128(const unsigned char values[BLOCK_SIZE][BLOCK_SIZE]);
+	CipherBlock128(const unsigned char values[BLOCK_SIZE * BLOCK_SIZE]);
 
 	void printHex()
 	{
@@ -45,8 +29,44 @@ typedef struct CipherBlock128
 			printf("\n");
 		}
 	}
+	void printBinary()
+	{
+		for (int i = 0; i < BLOCK_SIZE; i++)
+		{
+			for (int j = 0; j < BLOCK_SIZE; j++)
+			{
+				std::bitset<8> binary(data[i][j]);
+				std::cout << binary << " ";
+			}
+			printf("\n");
+		}
+	}
 
+	// xor operation
+	CipherBlock128 operator^(const CipherBlock128& b)
+	{
+		CipherBlock128 result;
 
-} CipherBlock128;
+		// Perform element-wise addition for row as int
+		for (int i = 0; i < BLOCK_SIZE; i++) 
+		{
+			*(int*)(result.data[0] + i) = *(int*)(data[0] + i) ^ *(int*)(b.data[0] + i);
+		}
+
+		return result;
+	}
+
+	friend inline std::ostream& operator<<(std::ostream& _stream, CipherBlock128 const& v) {
+		for (int i = 0; i < BLOCK_SIZE; i++)
+		{
+			for (int j = 0; j < BLOCK_SIZE; ++j) {
+				_stream << std::setw(2) << std::setfill('0') << std::hex
+					<< static_cast<unsigned>(v.data[i][j]) << " ";
+			}
+			_stream << std::endl;
+		}
+		return _stream;
+	}
+};
 
 #endif

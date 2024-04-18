@@ -26,7 +26,8 @@ int main()
                                 , 0x1c , 0x2d , 0x1e , 0x2f };
 
 
-    CipherBlock128 block = CipherBlock128(values);
+    CipherBlock128 block = CipherBlock128();
+    block = CipherBlock128(0xf);
     printf("Values 0:\n");
     block.printBinary();
     
@@ -34,24 +35,13 @@ int main()
     printf("\nValues 1:\n");
     block1.printBinary();
 
-    double timers[10000] = { 0 };
+    CipherBlock128 result = block ^ block1;
+    printf("\nResult\n");
+    result.printBinary();
 
-    CipherBlock128 newBlock;
-    for (size_t a = 0; a < 100; a++)
-    {
-        for (size_t i = 0; i < 10000; i++)
-        {
-            newBlock = block ^ block1;
-            //printf("\nValues addition\n");
-            //newBlock.printBinary();
-
-            newBlock = newBlock ^ block1;
-            //printf("\nValues addition\n");
-            //newBlock.printBinary();
-        }
-    }
-   
-
+    result = result ^ block1;
+    printf("\nResult\n");
+    result.printBinary();
 
     return 0;
 }

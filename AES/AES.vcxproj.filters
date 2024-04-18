@@ -21,6 +21,12 @@
     <ClInclude Include="CipherBlock128.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Utillity.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SBox.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AES.cpp">
@@ -30,6 +36,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CipherBlock128.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Utillity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -5,6 +5,7 @@
 Timers for debug purposes
 */
 #include <chrono>
+#include "AES.hpp"
 auto start_timer() {
     return std::chrono::high_resolution_clock::now();
 }
@@ -35,13 +36,7 @@ int main()
     printf("\nValues 1:\n");
     block1.printBinary();
 
-    CipherBlock128 result = block ^ block1;
-    printf("\nResult\n");
-    result.printBinary();
-
-    result = result ^ block1;
-    printf("\nResult\n");
-    result.printBinary();
+    AES::encrypt128(block, block1);
 
     return 0;
 }

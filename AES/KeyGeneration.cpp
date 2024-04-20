@@ -1,16 +1,15 @@
 #include "KeyGeneration.hpp"
 
-void KeyGeneration::GenerateKeys(CipherBlock128 key, CipherBlock128* output)
+void KeyGeneration::generateKeys128(CipherBlock128 key, CipherBlock128* output)
 {
-    int words[(ROUNDS_128 + 1) * BLOCK_SIZE];
+    unsigned int words[(ROUNDS_128 + 1) * BLOCK_SIZE];
 
     // Generate first key
     for (int i = 0; i < BLOCK_SIZE; i++)
     {
         words[i] = key.getColumn(i);
     }
-    output[0] = CipherBlock128(words);
-    output[0].printHexLine();
+    output[0] = CipherBlock128(words, false);
 
     // Generate keys for all rounds ('ROUNDS_128' additional keys)
     for (int i = 0; i < ROUNDS_128; i++)
@@ -27,9 +26,7 @@ void KeyGeneration::GenerateKeys(CipherBlock128 key, CipherBlock128* output)
             words[curWordsIndex + j] = words[curWordsIndex + j - 1] ^ words[lastWordsIndex + j];
         }
 
-        output[i + 1] = CipherBlock128(words + curWordsIndex);
-        printf("|%d|\n", i);
-        output[i + 1].printHex();
+        output[i + 1] = CipherBlock128(words + curWordsIndex, false);
     }
 }
 

@@ -1,13 +1,23 @@
 #include "Utillity.hpp"
 
-CipherBlock128 Utillity128::subBytes(CipherBlock128 data)
+void Utillity128::subBytes(CipherBlock128* data)
 {
-	return CipherBlock128();
+	for (int i = 0; i < BLOCK_SIZE * BLOCK_SIZE; i++)
+	{
+		data->data[0][i] = subByte(data->data[0][i]);
+	}
 }
 
-CipherBlock128 Utillity128::shiftRow(CipherBlock128 data)
+void Utillity128::shiftRow(CipherBlock128* data)
 {
-	return CipherBlock128();
+	unsigned int rows[BLOCK_SIZE];
+
+	for (int i = 0; i < BLOCK_SIZE; i++)
+	{
+		rows[i] = data->shiftRow(i, i);
+	}
+
+	*data = CipherBlock128(rows, true);
 }
 
 CipherBlock128 Utillity128::mixColumn(CipherBlock128 data)
@@ -18,7 +28,7 @@ CipherBlock128 Utillity128::mixColumn(CipherBlock128 data)
 
 CipherBlock128 Utillity128::addRoundKey(CipherBlock128 data, CipherBlock128* keys, int round)
 {
-	return CipherBlock128();
+	return data ^ keys[round];
 }
 
 unsigned int Utillity128::subWord(unsigned int word)

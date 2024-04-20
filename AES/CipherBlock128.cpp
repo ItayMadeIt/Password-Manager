@@ -16,11 +16,30 @@ CipherBlock128::CipherBlock128(const unsigned char value)
 	}
 }
 
-CipherBlock128::CipherBlock128(const int values[BLOCK_SIZE])
+CipherBlock128::CipherBlock128(const unsigned int values[BLOCK_SIZE], const bool isRows)
 {
-	for (int i = 0; i < BLOCK_SIZE; i++)
+	// if is columns
+	if (!isRows)
 	{
-		*(((int*)data) + i) = values[i];
+		for (int i = 0; i < BLOCK_SIZE; i++)
+		{
+			*(((int*)data) + i) = values[i];
+		}
+
+		return;
+	}
+
+	// if is rows
+	for (int srcRow = 0; srcRow < BLOCK_SIZE; srcRow++)
+	{
+		int dstRow = BLOCK_SIZE - 1 - srcRow;
+		
+		for (int srcCol = 0; srcCol < BLOCK_SIZE; srcCol++)
+		{
+			int dstCol = BLOCK_SIZE - 1 - srcCol;
+		
+			data[dstCol][dstRow] = (values[srcRow] >> (srcCol * BYTE_TO_BIT));
+		}
 	}
 }
 
@@ -92,14 +111,14 @@ void CipherBlock128::printBinary()
 	}
 }
 
-int CipherBlock128::getRow(int rowIndex)
+int CipherBlock128::getRow(int rowIndex) const
 {
 	return ((data[0][BLOCK_SIZE - 1 - rowIndex] << sizeof(char) * BYTE_TO_BIT * (BLOCK_SIZE - 1)) +
 			(data[1][BLOCK_SIZE - 1 - rowIndex] << sizeof(char) * BYTE_TO_BIT * (BLOCK_SIZE - 2)) +
 			(data[2][BLOCK_SIZE - 1 - rowIndex] << sizeof(char) * BYTE_TO_BIT * (BLOCK_SIZE - 3)) +
 			(data[3][BLOCK_SIZE - 1 - rowIndex] << sizeof(char) * BYTE_TO_BIT * (BLOCK_SIZE - 4)));
 }
-int CipherBlock128::shiftRow(int rowIndex, int shift)
+int CipherBlock128::shiftRow(int rowIndex, int shift) const
 {
 	return ((data[0][BLOCK_SIZE - 1 - rowIndex] << sizeof(char) * BYTE_TO_BIT * (BLOCK_SIZE - 1 + shift)) +
 		    (data[1][BLOCK_SIZE - 1 - rowIndex] << sizeof(char) * BYTE_TO_BIT * (BLOCK_SIZE - 2 + shift)) +
@@ -107,12 +126,12 @@ int CipherBlock128::shiftRow(int rowIndex, int shift)
 		    (data[3][BLOCK_SIZE - 1 - rowIndex] << sizeof(char) * BYTE_TO_BIT * (BLOCK_SIZE - 4 + shift)));
 }
 
-int CipherBlock128::getColumn(int columnIndex)
+int CipherBlock128::getColumn(int columnIndex) const
 {
 	return *((int*)(data)+columnIndex);
 }
 
-int CipherBlock128::shiftColumn(int columnIndex, int shift)
+int CipherBlock128::shiftColumn(int columnIndex, int shift) const
 {
 	int column = *((int*)(data)+columnIndex);
 
@@ -132,6 +151,19 @@ CipherBlock128 CipherBlock128::operator^(const CipherBlock128& other)
 	}
 
 	return result;
+}
+
+bool operator==(const CipherBlock128& lhs, const CipherBlock128& rhs)
+{
+	for (int column = 0; column < BLOCK_SIZE; column++)
+	{
+		if (lhs.getColumn(column) != rhs.getColumn(column))
+		{
+			return false;
+		}
+	}
+
+	return true;
 }
 
 inline std::ostream& operator<<(std::ostream& _stream, CipherBlock128 const& v)

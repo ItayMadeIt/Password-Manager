@@ -12,8 +12,8 @@ const int ROUNDS_256 = 14;
 class Utillity128
 {
 public:
-	static CipherBlock128 subBytes(CipherBlock128 data);
-	static CipherBlock128 shiftRow(CipherBlock128 data);
+	static void subBytes(CipherBlock128* data);
+	static void shiftRow(CipherBlock128* data);
 	static CipherBlock128 mixColumn(CipherBlock128 data);
 	static CipherBlock128 addRoundKey(CipherBlock128 data, CipherBlock128* keys, int round);
 

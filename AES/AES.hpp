@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include "CipherBlock128.hpp"
 #include "Utillity.hpp"
+#include "KeyGeneration.hpp"
 
 class AES
 {

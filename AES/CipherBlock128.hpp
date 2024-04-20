@@ -18,7 +18,7 @@ public:
 	// instructors
 	CipherBlock128();
 	CipherBlock128(const unsigned char value);
-	CipherBlock128(const int values[BLOCK_SIZE]);
+	CipherBlock128(const unsigned int values[BLOCK_SIZE], const bool isRows);
 	CipherBlock128(const unsigned char values[BLOCK_SIZE][BLOCK_SIZE]);
 	CipherBlock128(const unsigned char values[BLOCK_SIZE * BLOCK_SIZE]);
 
@@ -28,13 +28,15 @@ public:
 	void printBinary();
 
 	// get row and column as integers (4 chars = 4 bytes = int)
-	int getRow(int rowIndex);
-	int shiftRow(int rowIndex, int shift);
-	int getColumn(int columnIndex);
-	int shiftColumn(int columnIndex, int shift);
+	int getRow(int rowIndex) const;
+	int shiftRow(int rowIndex, int shift) const;
+	int getColumn(int columnIndex) const;
+	int shiftColumn(int columnIndex, int shift) const;
 
 	// xor operation
 	CipherBlock128 operator^(const CipherBlock128& other);
+	// equal
+	friend bool operator==(const CipherBlock128& lhs, const CipherBlock128& rhs);
 
 	// "to string" function (easy to pring using std::cout)
 	friend inline std::ostream& operator<<(std::ostream& _stream, CipherBlock128 const& v);

@@ -20,48 +20,54 @@ double end_timer(std::chrono::time_point<std::chrono::high_resolution_clock> sta
 int main() 
 {
 
-	unsigned char values1[BLOCK_SIZE * BLOCK_SIZE] = 
-                                { 0x54 , 0x68 , 0x61 , 0x74 
-                                , 0x73 , 0x20 , 0x6D , 0x79 
-                                , 0x20 , 0x4B , 0x75 , 0x6E 
-                                , 0x67 , 0x20 , 0x46 , 0x75 };
+	unsigned char dataValues[BLOCK_SIZE * BLOCK_SIZE] = 
+                                { 0x54 , 0x77 , 0x6F , 0x20 
+                                , 0x4F , 0x6E , 0x65 , 0x20 
+                                , 0x4E , 0x69 , 0x6E , 0x65 
+                                , 0x20 , 0x54 , 0x77 , 0x6F };
 
-    int values2[BLOCK_SIZE] =   { 0x73617469 
-                                , 0x7368636a
-                                , 0x6973626f
-                                , 0x72696e67 };
+    unsigned char keyValues[BLOCK_SIZE * BLOCK_SIZE] = 
+                                { 0x54 , 0x68 , 0x61 , 0x74,
+                                  0x73 , 0x20 , 0x6D , 0x79,
+                                  0x20 , 0x4B , 0x75 , 0x6E,
+                                  0x67 , 0x20 , 0x46 , 0x75 };
+
+    unsigned int keyRowValues[BLOCK_SIZE] = 
+                                { 0x54732067,
+                                  0x68204B20,
+                                  0x616D7546,
+                                  0x74796E75 };
+     unsigned int keyColValues[BLOCK_SIZE] = 
+                                { 0x54686174 
+                                , 0x73206D79 
+                                , 0x204B756E 
+                                , 0x67204675 };
 
 
-    CipherBlock128 v1 = CipherBlock128(values1);
-    CipherBlock128 v2 = CipherBlock128(values2);
+    CipherBlock128 data = CipherBlock128(dataValues);
 
-    printf("Char Constructor:\n");
-    v1.printHex();
-    printf("\n\n");
-    printf("Int Constructor:\n");
-    v2.printHex();
+    CipherBlock128 key = CipherBlock128(keyValues);
+    key.printHex();
+    printf("\n");
+    CipherBlock128 keyRow = CipherBlock128(keyRowValues, true);
+    keyRow.printHex();
+    printf("\n");
+    CipherBlock128 keyCol = CipherBlock128(keyColValues, false);
+    keyRow.printHex();
+    printf("\n");
 
-    printf("Row:%08X\n", v1.getRow(1));
-    printf("Column:%08X\n", v1.getColumn(1));
-
-    CipherBlock128 key = CipherBlock128(values1);
-    
-    for (size_t i = 0; i < 4; i++)
+    if (keyCol == keyRow && keyCol == key)
     {
-        printf("%08X\n", key.getColumn(i));
+        printf("Keys are equal\n");
     }
-    
+
     CipherBlock128 keys[ROUNDS_128 + 1] = {};
     
-    KeyGeneration::GenerateKeys(key, keys);
 
-    printf("\n\n");
-    for (size_t i = 0; i < ROUNDS_128 + 1; i++)
-    {
-        keys[i].printHexLine();
-    }
+
+    KeyGeneration::generateKeys128(key, keys);
     
-    //AES::encrypt128(block, key);
+    AES::encrypt128(data, key);
 
     return 0;
 }

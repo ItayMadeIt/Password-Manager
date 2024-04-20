@@ -19,7 +19,7 @@ const unsigned int ROUND_CONSTANTS_128[ROUNDS_128] = { 0x01000000 ,
 class KeyGeneration							  
 {
 public:
-	static void GenerateKeys(CipherBlock128 key, CipherBlock128* output);
+	static void generateKeys128(CipherBlock128 key, CipherBlock128* output);
 	//CipherBlock128* GenerateKeys(CipherBlock192 key);
 	//CipherBlock128* GenerateKeys(CipherBlock256 key);
 

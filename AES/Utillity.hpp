@@ -5,18 +5,20 @@
 #include "SBox.hpp"
 #include <iostream>
 
+const int ROUNDS_128 = 10;
+const int ROUNDS_192 = 12;
+const int ROUNDS_256 = 14;
+
 class Utillity128
 {
 public:
-	static CipherBlock128 subByte(CipherBlock128 data);
+	static CipherBlock128 subBytes(CipherBlock128 data);
 	static CipherBlock128 shiftRow(CipherBlock128 data);
 	static CipherBlock128 mixColumn(CipherBlock128 data);
 	static CipherBlock128 addRoundKey(CipherBlock128 data, CipherBlock128* keys, int round);
 
-	static SBox getSBox()
-	{
-		return PREDEFINED_SBOX;
-	}
+	static int subByte(int byte);
+
 	static CipherBlock128& getConstMatrix()
 	{
 		static CipherBlock128 constMatrix;
@@ -34,6 +36,9 @@ public:
 
 		return constMatrix;
 	}
+
+private:
+	static std::pair<unsigned char, unsigned char> byteToPos(unsigned char value);
 };
 
 #endif

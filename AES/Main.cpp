@@ -6,6 +6,7 @@ Timers for debug purposes
 */
 #include <chrono>
 #include "AES.hpp"
+#include "KeyGeneration.hpp"
 auto start_timer() {
     return std::chrono::high_resolution_clock::now();
 }
@@ -20,30 +21,51 @@ int main()
 {
 
 	unsigned char values1[BLOCK_SIZE * BLOCK_SIZE] = 
-                                { 0x11 , 0x11 , 0x12 , 0x13 
-                                , 0x14 , 0x15 , 0x26 , 0x64 
-                                , 0x28 , 0x29 , 0x1a , 0x52 
-                                , 0x23 , 0x64 , 0x52 , 0x11 };
+                                { 0x54 , 0x68 , 0x61 , 0x74 
+                                , 0x73 , 0x20 , 0x6D , 0x79 
+                                , 0x20 , 0x4B , 0x75 , 0x6E 
+                                , 0x67 , 0x20 , 0x46 , 0x75 };
+
+    int values2[BLOCK_SIZE] =   { 0x54686174 
+                                , 0x73206D79
+                                , 0x204B756E 
+                                , 0x67204675 };
 
 
-    CipherBlock128 block = CipherBlock128();
-    printf("Values 0:\n");
-    block.printHex();
+    CipherBlock128 v1 = CipherBlock128(values1);
+    CipherBlock128 v2 = CipherBlock128(values2);
+
+    printf("Char Constructor:\n");
+    v1.printHex();
+    printf("\n\n");
+    printf("Int Constructor:\n");
+    v2.printHex();
+
+    printf("Row:%08X\n", v1.getRow(1));
+    printf("Column:%08X\n", v1.getColumn(1));
+
+    CipherBlock128 key = CipherBlock128(values1);
+    key.printHex();
+    key.printHexLine();
+    int rows[4] = { 0 };
     
-    CipherBlock128 block1 = CipherBlock128(values1);
-    printf("\nValues 1:\n");
-    block1.printHex();
-
-    CipherBlock128 result = block ^ block1;
-    printf("\nResult:\n");
-    result.printHex();
-
-    std::cout << std::hex << result.getRow(3) << std::endl;
-    std::cout << std::hex << result.shiftRow(3, 1) << std::endl;
-    std::cout << std::hex << result.getColumn(3) << std::endl;
-    std::cout << std::hex << result.shiftColumn(3, 1) << std::endl;
-
-    AES::encrypt128(block, block1);
+    for (size_t i = 0; i < 4; i++)
+    {
+        rows[i] = key.getColumn(i);
+        printf("%08X\n", rows[i]);
+    }
+    
+    
+    CipherBlock128 keys[ROUNDS_128 + 1] = {};
+    
+    KeyGeneration::GenerateKeys(key, keys);
+    
+    for (size_t i = 0; i < ROUNDS_128 + 1; i++)
+    {
+        keys[i].printHexLine();
+    }
+    
+    //AES::encrypt128(block, key);
 
     return 0;
 }

@@ -18,10 +18,6 @@ public:
     //static CipherBlock128 decrypt192(CipherBlock128 data, CipherBlock128 key);
     //static CipherBlock128 decrypt256(CipherBlock128 data, CipherBlock128 key);
 
-private:
-    static const int ROUNDS_128 = 10;
-    static const int ROUNDS_192 = 12;
-    static const int ROUNDS_256 = 14;
 };
 
 

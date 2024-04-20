@@ -24,13 +24,14 @@ public:
 
 	// print
 	void printHex();
+	void printHexLine();
 	void printBinary();
 
 	// get row and column as integers (4 chars = 4 bytes = int)
-	int getRow(int row);
-	int shiftRow(int row, int shift);
-	int getColumn(int column);
-	int shiftColumn(int column, int shift);
+	int getRow(int rowIndex);
+	int shiftRow(int rowIndex, int shift);
+	int getColumn(int columnIndex);
+	int shiftColumn(int columnIndex, int shift);
 
 	// xor operation
 	CipherBlock128 operator^(const CipherBlock128& other);

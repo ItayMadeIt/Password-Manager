@@ -12,7 +12,7 @@ CipherBlock128 AES::encrypt128(CipherBlock128 data, CipherBlock128 key)
 
 	for (int round = 0; round < ROUNDS_128; round++)
 	{
-		encryptedData = Utillity128::subByte(encryptedData);
+		encryptedData = Utillity128::subBytes(encryptedData);
 
 		encryptedData = Utillity128::shiftRow(encryptedData);
 		

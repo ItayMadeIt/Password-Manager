@@ -14,7 +14,7 @@ class Utillity128
 public:
 	static void subBytes(CipherBlock128* data);
 	static void shiftRow(CipherBlock128* data);
-	static CipherBlock128 mixColumn(CipherBlock128 data);
+	static void mixColumn(CipherBlock128* data);
 	static CipherBlock128 addRoundKey(CipherBlock128 data, CipherBlock128* keys, int round);
 
 	static unsigned int subWord(unsigned int word);
@@ -22,6 +22,7 @@ public:
 
 	static unsigned short polynomialMultiplyGF28(unsigned char value, unsigned char addition);
 	static unsigned char polynomialReduceGF28(unsigned short value);
+	static unsigned char dotProduct(unsigned char bytesA[sizeof(int)], unsigned char bytesB[sizeof(int)]);
 
 	static CipherBlock128& getConstMatrix()
 	{

@@ -20,10 +20,37 @@ void Utillity128::shiftRow(CipherBlock128* data)
 	*data = CipherBlock128(rows, true);
 }
 
-CipherBlock128 Utillity128::mixColumn(CipherBlock128 data)
+void Utillity128::mixColumn(CipherBlock128* data)
 {
-	Utillity128::getConstMatrix();
-	return CipherBlock128();
+	CipherBlock128 constMatrix = Utillity128::getConstMatrix();
+	
+	unsigned char resultData[BLOCK_SIZE][BLOCK_SIZE];
+
+	for (int col = 0; col < BLOCK_SIZE; col++)
+	{
+		int constMatrixColInt = constMatrix.getRow(col);
+		unsigned char constMatrixCol[BLOCK_SIZE];
+
+		for (int i = 0; i < BLOCK_SIZE; i++)
+		{
+			constMatrixCol[i] = constMatrixColInt >> i * BYTE_TO_BIT;
+		}
+
+		for (int row = 0; row < BLOCK_SIZE; row++)
+		{
+			int dataRowInt = data->getColumn(row);
+			unsigned char dataRow[BLOCK_SIZE];
+
+			for (int i = 0; i < BLOCK_SIZE; i++)
+			{
+				dataRow[i] = dataRowInt >> (BLOCK_SIZE-1-i) * BYTE_TO_BIT;
+			}
+
+			resultData[row][BLOCK_SIZE - 1 -col] = dotProduct(dataRow, constMatrixCol);
+		}
+	}
+
+	*data = CipherBlock128(resultData);
 }
 
 CipherBlock128 Utillity128::addRoundKey(CipherBlock128 data, CipherBlock128* keys, int round)
@@ -56,15 +83,21 @@ unsigned short Utillity128::polynomialMultiplyGF28(unsigned char a, unsigned cha
 	unsigned short result = 0;
 	int index = 0;
 
-	while (b)
+	while (true)
 	{
 		if (b & 0b00000001)
 		{
 			result ^= a << index;
 		}
+		
+		b >>= 1;
+
+		if (!b)
+		{
+			break;
+		}
 
 		index++;
-		b >>= 1;
 	}
 
 	return result;
@@ -72,13 +105,18 @@ unsigned short Utillity128::polynomialMultiplyGF28(unsigned char a, unsigned cha
 
 unsigned char Utillity128::polynomialReduceGF28(unsigned short a)
 {
+	if (a <= 0xff)
+	{
+		return a;
+	}
+
 	unsigned short result = a;
-	int index = countLeftStartBit(a);
+	int index = countLeftStartBit(a) - 1;
 	unsigned short divisor = IRREDUCIBLE_POLYNOMIAL << (index - IRREDUCIBLE_POLYNOMIAL_MAX_BIT);
 
-	while (result > IRREDUCIBLE_POLYNOMIAL)
+	while (result > 0xff)
 	{
-		if (!(result & 0b1 << index))
+		if (!(result & (0b1 << index)))
 		{
 			index--;
 			divisor >>= 1;
@@ -90,6 +128,16 @@ unsigned char Utillity128::polynomialReduceGF28(unsigned short a)
 		index--;
 	}
 
+	return result;
+}
+
+unsigned char Utillity128::dotProduct(unsigned char bytesA[sizeof(int)], unsigned char bytesB[sizeof(int)])
+{
+	unsigned char result = 0;
+	for (int i = 0; i < sizeof(int); i++)
+	{
+		result ^= polynomialReduceGF28(polynomialMultiplyGF28(bytesA[i], bytesB[i]));
+	}
 	return result;
 }
 

@@ -26,10 +26,10 @@ int main()
                                 , 0x20 , 0x4B , 0x75 , 0x6E 
                                 , 0x67 , 0x20 , 0x46 , 0x75 };
 
-    int values2[BLOCK_SIZE] =   { 0x54686174 
-                                , 0x73206D79
-                                , 0x204B756E 
-                                , 0x67204675 };
+    int values2[BLOCK_SIZE] =   { 0x73617469 
+                                , 0x7368636a
+                                , 0x6973626f
+                                , 0x72696e67 };
 
 
     CipherBlock128 v1 = CipherBlock128(values1);
@@ -45,21 +45,17 @@ int main()
     printf("Column:%08X\n", v1.getColumn(1));
 
     CipherBlock128 key = CipherBlock128(values1);
-    key.printHex();
-    key.printHexLine();
-    int rows[4] = { 0 };
     
     for (size_t i = 0; i < 4; i++)
     {
-        rows[i] = key.getColumn(i);
-        printf("%08X\n", rows[i]);
+        printf("%08X\n", key.getColumn(i));
     }
-    
     
     CipherBlock128 keys[ROUNDS_128 + 1] = {};
     
     KeyGeneration::GenerateKeys(key, keys);
-    
+
+    printf("\n\n");
     for (size_t i = 0; i < ROUNDS_128 + 1; i++)
     {
         keys[i].printHexLine();

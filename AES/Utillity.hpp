@@ -17,7 +17,8 @@ public:
 	static CipherBlock128 mixColumn(CipherBlock128 data);
 	static CipherBlock128 addRoundKey(CipherBlock128 data, CipherBlock128* keys, int round);
 
-	static int subByte(int byte);
+	static unsigned int subWord(unsigned int word);
+	static unsigned char subByte(unsigned char byte);
 
 	static CipherBlock128& getConstMatrix()
 	{

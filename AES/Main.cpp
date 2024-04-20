@@ -1,5 +1,6 @@
 #include <iostream>
 #include "CipherBlock128.hpp"
+#include "Utillity.hpp"
 
 /*
 Timers for debug purposes
@@ -19,6 +20,12 @@ double end_timer(std::chrono::time_point<std::chrono::high_resolution_clock> sta
 
 int main() 
 {
+    unsigned short value = Utillity128::polynomialMultiplyGF28(0b11010110, 0b00110110);
+    unsigned short result = Utillity128::polynomialReduceGF28(value);
+    std::cout << std::bitset<16>(result) << std::endl;
+
+    printf("\n\n\n\n\------\n");
+
 
 	unsigned char dataValues[BLOCK_SIZE * BLOCK_SIZE] = 
                                 { 0x54 , 0x77 , 0x6F , 0x20 

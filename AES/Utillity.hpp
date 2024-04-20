@@ -20,6 +20,9 @@ public:
 	static unsigned int subWord(unsigned int word);
 	static unsigned char subByte(unsigned char byte);
 
+	static unsigned short polynomialMultiplyGF28(unsigned char value, unsigned char addition);
+	static unsigned char polynomialReduceGF28(unsigned short value);
+
 	static CipherBlock128& getConstMatrix()
 	{
 		static CipherBlock128 constMatrix;
@@ -40,6 +43,11 @@ public:
 
 private:
 	static std::pair<unsigned char, unsigned char> byteToPos(unsigned char value);
+
+	static int countLeftStartBit(unsigned short value);
+	static const unsigned short IRREDUCIBLE_POLYNOMIAL = 0b100011011;
+	static const unsigned short IRREDUCIBLE_POLYNOMIAL_MAX_BIT = 8;
+								
 };
 
 #endif

@@ -51,6 +51,60 @@ unsigned char Utillity128::subByte(unsigned char byte)
 	return PREDEFINED_SBOX[pos.first][pos.second];
 }
 
+unsigned short Utillity128::polynomialMultiplyGF28(unsigned char a, unsigned char b)
+{
+	unsigned short result = 0;
+	int index = 0;
+
+	while (b)
+	{
+		if (b & 0b00000001)
+		{
+			result ^= a << index;
+		}
+
+		index++;
+		b >>= 1;
+	}
+
+	return result;
+}
+
+unsigned char Utillity128::polynomialReduceGF28(unsigned short a)
+{
+	unsigned short result = a;
+	int index = countLeftStartBit(a);
+	unsigned short divisor = IRREDUCIBLE_POLYNOMIAL << (index - IRREDUCIBLE_POLYNOMIAL_MAX_BIT);
+
+	while (result > IRREDUCIBLE_POLYNOMIAL)
+	{
+		if (!(result & 0b1 << index))
+		{
+			index--;
+			divisor >>= 1;
+			continue;
+		}
+
+		result ^= divisor;
+		divisor >>= 1;
+		index--;
+	}
+
+	return result;
+}
+
+int Utillity128::countLeftStartBit(unsigned short value)
+{
+	int count = 0;
+
+	while (value)
+	{
+		count++;
+		value >>= 1;
+	}
+
+	return count;
+}
 
 std::pair<unsigned char, unsigned char> Utillity128::byteToPos(unsigned char value)
 {

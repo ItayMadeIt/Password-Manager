@@ -127,6 +127,8 @@ void CipherBlock128::getRowAsChars(int rowIndex, unsigned char row[BLOCK_SIZE]) 
 }
 int CipherBlock128::shiftRow(int rowIndex, int shift) const
 {
+	shift &= (BLOCK_SIZE-1); // taking advantage of binary operations to modulo by 4
+
 	return ((data[0][BLOCK_SIZE - 1 - rowIndex] << sizeof(char) * BYTE_TO_BIT * (BLOCK_SIZE - 1 + shift)) +
 		    (data[1][BLOCK_SIZE - 1 - rowIndex] << sizeof(char) * BYTE_TO_BIT * (BLOCK_SIZE - 2 + shift)) +
 		    (data[2][BLOCK_SIZE - 1 - rowIndex] << sizeof(char) * BYTE_TO_BIT * (BLOCK_SIZE - 3 + shift)) +

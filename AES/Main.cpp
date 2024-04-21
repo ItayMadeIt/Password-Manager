@@ -43,11 +43,10 @@ int main()
 
     auto start = start_timer();
     result = AES::encrypt128(data, key);
-
     auto end = end_timer(start);
     printf("%f\n", end);
-
     result.printHexLine();
+
 
     return 0;
 }

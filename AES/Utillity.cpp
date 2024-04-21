@@ -22,7 +22,7 @@ void Utillity128::shiftRow(CipherBlock128* data)
 
 void Utillity128::mixColumn(CipherBlock128* data)
 {
-	CipherBlock128 constMatrix = Utillity128::getConstMatrix();
+	CipherBlock128 constMatrix = Utillity128::getEncryptMatrix();
 	
 	unsigned char resultData[BLOCK_SIZE][BLOCK_SIZE];
 
@@ -58,6 +58,58 @@ CipherBlock128 Utillity128::addRoundKey(CipherBlock128 data, CipherBlock128* key
 	return data ^ keys[round];
 }
 
+void Utillity128::invSubBytes(CipherBlock128* data)
+{
+	for (int i = 0; i < BLOCK_SIZE * BLOCK_SIZE; i++)
+	{
+		data->data[0][i] = invSubByte(data->data[0][i]);
+	}
+}
+
+void Utillity128::invShiftRow(CipherBlock128* data)
+{
+	unsigned int rows[BLOCK_SIZE];
+
+	for (int i = 0; i < BLOCK_SIZE; i++)
+	{
+		rows[i] = data->shiftRow(i, BLOCK_SIZE-i);
+	}
+
+	*data = CipherBlock128(rows, true);
+}
+
+void Utillity128::invMixColumn(CipherBlock128* data)
+{
+	CipherBlock128 constMatrix = Utillity128::getDecryptMatrix();
+
+	unsigned char resultData[BLOCK_SIZE][BLOCK_SIZE];
+
+	// calc collumns
+	unsigned char dataCol[BLOCK_SIZE][BLOCK_SIZE];
+	for (int i = 0; i < BLOCK_SIZE; i++)
+	{
+		data->getColumnAsChars(i, dataCol[i]);
+	}
+
+	// calc rows
+	unsigned char constMatrixRow[BLOCK_SIZE][BLOCK_SIZE];
+	for (int i = 0; i < BLOCK_SIZE; i++)
+	{
+		constMatrix.getRowAsChars(i, constMatrixRow[i]);
+	}
+
+	// calc dotproduct of every value (matrix multiplication) 
+	for (int row = 0; row < BLOCK_SIZE; row++)
+	{
+		for (int col = 0; col < BLOCK_SIZE; col++)
+		{
+			resultData[col][BLOCK_SIZE - 1 - row] = dotProduct(dataCol[col], constMatrixRow[row]);
+		}
+	}
+
+	*data = CipherBlock128(resultData);
+}
+
 unsigned int Utillity128::subWord(unsigned int word)
 {
 	int result = 0;
@@ -74,6 +126,11 @@ unsigned int Utillity128::subWord(unsigned int word)
 unsigned char Utillity128::subByte(unsigned char byte)
 {
 	return PREDEFINED_SBOX[byte];
+}
+
+unsigned char Utillity128::invSubByte(unsigned char byte)
+{
+	return PREDEFINED_INV_SBOX[byte];
 }
 
 unsigned short Utillity128::polynomialMultiplyGF28(unsigned char a, unsigned char b)

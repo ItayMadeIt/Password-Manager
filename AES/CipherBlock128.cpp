@@ -118,6 +118,13 @@ int CipherBlock128::getRow(int rowIndex) const
 			(data[2][BLOCK_SIZE - 1 - rowIndex] << sizeof(char) * BYTE_TO_BIT * (BLOCK_SIZE - 3)) +
 			(data[3][BLOCK_SIZE - 1 - rowIndex] << sizeof(char) * BYTE_TO_BIT * (BLOCK_SIZE - 4)));
 }
+void CipherBlock128::getRowAsChars(int rowIndex, unsigned char row[BLOCK_SIZE]) const
+{
+	for (int i = 0; i < BLOCK_SIZE; i++)
+	{
+		row[i] = data[BLOCK_SIZE - 1 - i][BLOCK_SIZE - 1 - rowIndex];
+	}
+}
 int CipherBlock128::shiftRow(int rowIndex, int shift) const
 {
 	return ((data[0][BLOCK_SIZE - 1 - rowIndex] << sizeof(char) * BYTE_TO_BIT * (BLOCK_SIZE - 1 + shift)) +
@@ -129,6 +136,14 @@ int CipherBlock128::shiftRow(int rowIndex, int shift) const
 int CipherBlock128::getColumn(int columnIndex) const
 {
 	return *((int*)(data)+columnIndex);
+}
+
+void CipherBlock128::getColumnAsChars(int columnIndex, unsigned char column[BLOCK_SIZE]) const
+{
+	for (int i = 0; i < BLOCK_SIZE; i++)
+	{
+		column[i] = data[columnIndex][BLOCK_SIZE-1-i];
+	}
 }
 
 int CipherBlock128::shiftColumn(int columnIndex, int shift) const

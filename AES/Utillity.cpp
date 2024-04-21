@@ -26,29 +26,29 @@ void Utillity128::mixColumn(CipherBlock128* data)
 	
 	unsigned char resultData[BLOCK_SIZE][BLOCK_SIZE];
 
-	for (int col = 0; col < BLOCK_SIZE; col++)
+	// calc collumns
+	unsigned char dataCol[BLOCK_SIZE][BLOCK_SIZE];
+	for (int i = 0; i < BLOCK_SIZE; i++)
 	{
-		int constMatrixColInt = constMatrix.getRow(col);
-		unsigned char constMatrixCol[BLOCK_SIZE];
+		data->getColumnAsChars(i, dataCol[i]);
+	}
 
-		for (int i = 0; i < BLOCK_SIZE; i++)
+	// calc rows
+	unsigned char constMatrixRow[BLOCK_SIZE][BLOCK_SIZE];
+	for (int i = 0; i < BLOCK_SIZE; i++)
+	{
+		constMatrix.getRowAsChars(i, constMatrixRow[i]);
+	}
+
+	// calc dotproduct of every value (matrix multiplication) 
+	for (int row = 0; row < BLOCK_SIZE; row++)
+	{
+		for (int col = 0; col < BLOCK_SIZE; col++)
 		{
-			constMatrixCol[i] = constMatrixColInt >> i * BYTE_TO_BIT;
-		}
-
-		for (int row = 0; row < BLOCK_SIZE; row++)
-		{
-			int dataRowInt = data->getColumn(row);
-			unsigned char dataRow[BLOCK_SIZE];
-
-			for (int i = 0; i < BLOCK_SIZE; i++)
-			{
-				dataRow[i] = dataRowInt >> (BLOCK_SIZE-1-i) * BYTE_TO_BIT;
-			}
-
-			resultData[row][BLOCK_SIZE - 1 -col] = dotProduct(dataRow, constMatrixCol);
+			resultData[col][BLOCK_SIZE - 1 - row] = dotProduct(dataCol[col], constMatrixRow[row]);
 		}
 	}
+
 
 	*data = CipherBlock128(resultData);
 }

@@ -29,8 +29,10 @@ public:
 
 	// get row and column as integers (4 chars = 4 bytes = int)
 	int getRow(int rowIndex) const;
+	void getRowAsChars(int rowIndex, unsigned char row[BLOCK_SIZE]) const;
 	int shiftRow(int rowIndex, int shift) const;
 	int getColumn(int columnIndex) const;
+	void getColumnAsChars(int columnIndex, unsigned char column[BLOCK_SIZE]) const;
 	int shiftColumn(int columnIndex, int shift) const;
 
 	// xor operation

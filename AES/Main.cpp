@@ -15,7 +15,7 @@ auto start_timer() {
 // Get the duration in milliseconds since the start time
 double end_timer(std::chrono::time_point<std::chrono::high_resolution_clock> start_time) {
     auto end_time = std::chrono::high_resolution_clock::now();
-    return std::chrono::duration<double, std::milli>(end_time - start_time).count();
+    return std::chrono::duration<double, std::micro>(end_time - start_time).count();
 }
 
 int main()
@@ -37,11 +37,15 @@ int main()
 
     CipherBlock128 data = CipherBlock128(dataValues, false);
 
-    CipherBlock128 key = CipherBlock128((unsigned char)'\0');
+    CipherBlock128 key = CipherBlock128((unsigned char)(0));
 
     CipherBlock128 result;
 
+    auto start = start_timer();
     result = AES::encrypt128(data, key);
+
+    auto end = end_timer(start);
+    printf("%f\n", end);
 
     result.printHexLine();
 

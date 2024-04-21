@@ -73,9 +73,7 @@ unsigned int Utillity128::subWord(unsigned int word)
 
 unsigned char Utillity128::subByte(unsigned char byte)
 {
-	std::pair<unsigned char, unsigned char> pos = byteToPos(byte);
-
-	return PREDEFINED_SBOX[pos.first][pos.second];
+	return PREDEFINED_SBOX[byte];
 }
 
 unsigned short Utillity128::polynomialMultiplyGF28(unsigned char a, unsigned char b)
@@ -152,9 +150,4 @@ int Utillity128::countLeftStartBit(unsigned short value)
 	}
 
 	return count;
-}
-
-std::pair<unsigned char, unsigned char> Utillity128::byteToPos(unsigned char value)
-{
-	return { (value & 0xf0) >> BYTE_TO_BIT / 2,  value & 0x0f };
 }

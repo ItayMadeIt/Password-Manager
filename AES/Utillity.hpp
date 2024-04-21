@@ -43,8 +43,6 @@ public:
 	}
 
 private:
-	static std::pair<unsigned char, unsigned char> byteToPos(unsigned char value);
-
 	static int countLeftStartBit(unsigned short value);
 	static const unsigned short IRREDUCIBLE_POLYNOMIAL = 0b100011011;
 	static const unsigned short IRREDUCIBLE_POLYNOMIAL_MAX_BIT = 8;

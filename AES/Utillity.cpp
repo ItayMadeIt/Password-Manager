@@ -4,7 +4,7 @@ void Utillity128::subBytes(CipherBlock128* data)
 {
 	for (int i = 0; i < BLOCK_SIZE * BLOCK_SIZE; i++)
 	{
-		data->data[0][i] = subByte(data->data[0][i]);
+		data->data[0][i] = PREDEFINED_SBOX[data->data[0][i]];
 	}
 }
 
@@ -62,7 +62,7 @@ void Utillity128::invSubBytes(CipherBlock128* data)
 {
 	for (int i = 0; i < BLOCK_SIZE * BLOCK_SIZE; i++)
 	{
-		data->data[0][i] = invSubByte(data->data[0][i]);
+		data->data[0][i] = PREDEFINED_INV_SBOX[data->data[0][i]];
 	}
 }
 

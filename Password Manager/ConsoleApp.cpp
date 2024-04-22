@@ -2,6 +2,7 @@
 
 void ConsoleApp::printWelcome()
 {
+
 	// Simple welcome msg
 	printf("Welcome to PASSWORD-MANAGER program (by ItayMadeIt) Your trusted companion in the digital realm.\n");
 	printf("Here, your passwords, credit card details, secure notes, and more find a secure home, accessible only to you.\n");
